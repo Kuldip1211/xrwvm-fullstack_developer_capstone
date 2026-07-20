@@ -93,12 +93,24 @@ def get_cars(request):
 # def get_dealerships(request):
 #Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
 def get_dealerships(request, state="All"):
-    if(state == "All"):
-        endpoint = "/fetchDealers"
-    else:
-        endpoint = "/fetchDealers/"+state
-    dealerships = get_request(endpoint)
-    return JsonResponse({"status":200,"dealers":dealerships})
+    dealers = []
+    try:
+        if state == "All":
+            data = get_request(endpoint)   # your existing helper
+        else:
+            data = get_request(endpoint, {"state": state})
+
+        if isinstance(data, dict):
+            dealers = data.get("dealers", []) or []
+        elif isinstance(data, list):
+            dealers = data
+        else:
+            dealers = []
+    except Exception as e:
+        print("get_dealerships error:", e)
+        dealers = []
+
+    return JsonResponse({"status": 200, "dealers": dealers})
 
 
 # Create a `get_dealer_reviews` view to render the reviews of a dealer
