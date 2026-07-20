@@ -62,18 +62,14 @@ const PostReview = () => {
   }
 
   }
-  const get_dealer = async ()=>{
-    const res = await fetch(dealer_url, {
-      method: "GET"
-    });
+  const get_dealer = async () => {
+    const res = await fetch(dealer_url, { method: "GET" });
     const retobj = await res.json();
-    
-    if(retobj.status === 200) {
-      let dealerobjs = Array.from(retobj.dealer)
-      if(dealerobjs.length > 0)
-        setDealer(dealerobjs[0])
+  
+    if (retobj.status === 200 && retobj.dealer) {
+      setDealer(retobj.dealer); // directly set object
     }
-  }
+  };
 
   const get_cars = async ()=>{
     const res = await fetch(carmodels_url, {
@@ -94,7 +90,7 @@ const PostReview = () => {
     <div>
       <Header/>
       <div  style={{margin:"5%"}}>
-      {dealer && (
+      {dealer?.full_name && (
         <h1 style={{ color: "darkblue" }}>
             {dealer.full_name}
         </h1>
